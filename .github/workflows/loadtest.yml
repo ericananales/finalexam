@@ -1,0 +1,28 @@
+name: JMeter Load Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  loadtest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install JMeter
+        run: |
+          sudo apt update
+          sudo apt install -y jmeter
+
+      - name: Run Load Test
+        run: |
+          jmeter -n -t testplan.jmx -l results.jtl -e -o report
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-report
+          path: report
